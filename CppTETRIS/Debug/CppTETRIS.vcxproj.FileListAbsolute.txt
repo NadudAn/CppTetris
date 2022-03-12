@@ -1,2 +1,0 @@
-C:\Users\Nadud\source\repos\CppTETRIS\Debug\CppTETRIS.exe
-C:\Users\Nadud\source\repos\CppTETRIS\Debug\CppTETRIS.pdb
