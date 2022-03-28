@@ -35,3 +35,9 @@ public:
 	GamePlay();
 	~GamePlay();
 };
+
+class backup {
+public:
+	static void updateBlock(Block* source, Block& backupBlock);
+	static void updateTable(vector<vector<int>>& source, vector<vector<int>>& backupTable);
+};

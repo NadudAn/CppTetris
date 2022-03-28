@@ -32,6 +32,22 @@ void Block::rotate() {
 	rotationCount = (rotationCount + 1) % 4;
 }
 
+void Block::setX(int x) {
+	this->x = x;
+}
+
+void Block::setY(int y) {
+	this->y = y;
+}
+
+void Block::setRotationCount(int r) {
+	this->rotationCount = r;
+}
+
+void Block::setShape(int r, int y, int x, int value) {
+	this->shape[r][y][x] = value;
+}
+
 Block1::Block1() {
 	x = TABLE_X / 2 - 3; //초기 생성 맨 위 중앙 쯤으로 맞춤
 	y = 1;

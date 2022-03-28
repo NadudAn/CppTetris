@@ -158,6 +158,10 @@ public:
 	void left();
 	void right();
 	void rotate();
+	void setX(int);
+	void setY(int);
+	void setRotationCount(int);
+	void setShape(int, int, int, int);
 };
 
 class Block1 : public Block {

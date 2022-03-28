@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 using namespace std;
 
 //테트리스 판 x, y축 길이  S

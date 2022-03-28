@@ -37,6 +37,25 @@ MainMenu::MainMenu() {
 
 }
 
+void backup::updateBlock(Block* source, Block& backupBlock) {
+	backupBlock.setX(source->getX());
+	backupBlock.setY(source->getY());
+	backupBlock.setRotationCount(source->getRotationCount());
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			for (int k = 0; k < 4; k++) {
+				backupBlock.setShape(i, j, k, source->getShape(i, j, k));
+			}
+		}
+	}
+}
+
+void backup::updateTable(vector<vector<int>>& source, vector<vector<int>>& backupTable) {
+	backupTable.resize(source.size(), vector<int>(source.size()));
+	copy(source.begin(), source.end(), backupTable.begin());
+}
+
 //테이블 판 0 = "□", 1 = "▦", 2 = "■"
 GameTable::GameTable(int x, int y) { //테트리스 판 뼈대 생성
 	blockObject = nullptr;
@@ -95,6 +114,11 @@ void GameTable::createBlock() {
 
 //블럭 이동
 void GameTable::moveBlock(int key) {
+	Block backupBlock;
+	vector<vector<int>> backupTable;
+	backup::updateBlock(blockObject, backupBlock);
+	backup::updateTable(table, backupTable);
+
 	//테이블에서 블럭 객체 지우기
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -116,15 +140,28 @@ void GameTable::moveBlock(int key) {
 		for (int j = 0; j < 4; j++) {
 			int Y = j + blockObject->getY();
 			int X = i + blockObject->getX();
+			int blockValue = blockObject->getShape(blockObject->getRotationCount(), i, j);
+
+			if (blockValue != 2) continue;
+
 			if (table[Y][X] == 0)
-				table[Y][X] = blockObject->getShape(blockObject->getRotationCount(), i, j);
+				table[Y][X] = blockValue;
+			else if (table[Y][X] == 1) {
+				copy(backupTable.begin(), backupTable.end(), table.begin());
+				blockObject->setX(backupBlock.getX());
+				blockObject->setY(backupBlock.getY());
+				return;
+			}
 
 		}
 	}
 }
 
 void GameTable::rotateBlock() {
-	blockObject->rotate();
+	Block backupBlock;
+	vector<vector<int>> backupTable;
+	backup::updateBlock(blockObject, backupBlock);
+	backup::updateTable(table, backupTable);
 
 	//테이블에서 블럭 객체 지우기
 	for (int i = 0; i < 4; i++) {
@@ -137,13 +174,24 @@ void GameTable::rotateBlock() {
 		}
 	}
 
+	blockObject->rotate();
+
 	//회전한 블럭 상태를 테이블에 갱신
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			int Y = j + blockObject->getY();
 			int X = i + blockObject->getX();
+			int blockValue = blockObject->getShape(blockObject->getRotationCount(), i, j);
+
+			if (blockValue != 2) continue;
+
 			if (table[Y][X] == 0)
 				table[Y][X] = blockObject->getShape(blockObject->getRotationCount(), i, j);
+			else if (table[Y][X] == 1) {
+				copy(backupTable.begin(), backupTable.end(), table.begin());
+				blockObject->setRotationCount(backupBlock.getRotationCount());
+				return;
+			}
 		}
 	}
 }
